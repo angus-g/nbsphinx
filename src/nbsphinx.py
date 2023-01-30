@@ -1182,8 +1182,9 @@ class NotebookParser(rst.Parser):
         if resources.get('nbsphinx_widgets', False):
             env.nbsphinx_widgets.add(env.docname)
 
-        env.nbsphinx_thumbnails[env.docname] = resources.get(
-            'nbsphinx_thumbnail', {})
+        if env.config.nbsphinx_thumbnail_overwrite or env.docname not in env.config.nbsphinx_thumbnails:
+            env.nbsphinx_thumbnails[env.docname] = resources.get(
+                'nbsphinx_thumbnail', {})
 
 
 class NotebookError(sphinx.errors.SphinxError):
@@ -2480,6 +2481,7 @@ def setup(app):
     app.add_config_value('nbsphinx_widgets_options', {}, rebuild='html')
     app.add_config_value('nbsphinx_thumbnails', {}, rebuild='html')
     app.add_config_value('nbsphinx_thumbnail_default', 'none', rebuild='html')
+    app.add_config_value('nbsphinx_thumbnail_overwrite', True, rebuild='html')
     app.add_config_value('nbsphinx_assume_equations', True, rebuild='env')
 
     app.add_directive('nbinput', NbInput)
